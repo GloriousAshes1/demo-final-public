@@ -46,7 +46,7 @@ configure_gemini_api()
 
 # --- Hàm trích xuất thông tin ---
 @st.cache_data
-def extract_information_from_images_gemini(image_list):
+def extract_information_from_images_gemini(_image_list):
     """Trích xuất thông tin từ hình ảnh sử dụng Gemini AI"""
     model = genai.GenerativeModel('gemini-1.5-flash-latest')
     prompt_text = """
@@ -114,9 +114,14 @@ def extract_information_from_images_gemini(image_list):
         QUAN TRỌNG: Chỉ trả về nội dung của đối tượng JSON, không bao gồm các ký tự markdown như ```json
         """
 
-    request_contents = [prompt_text, *image_list]
+    request_contents = [prompt_text, *_image_list]
     response = model.generate_content(request_contents)
-    cleaned_json_text = response.text.strip().replace("```json", "").replace("```", "").strip()
+    cleaned_json_text = (
+        response.text.strip()
+        .replace("```json", "")
+        .replace("```", "")
+        .strip()
+    )
     return json.loads(cleaned_json_text)
 
 
